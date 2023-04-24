@@ -1,24 +1,42 @@
-import { useState } from "react"
 import Header from "./components/Header"
+import db from "../db.json"
+import { Container } from "./components/Container"
+import { useState } from "react"
+import { Sidebar } from "./components/Sidebar"
+import { EmailListItem } from "./components/EmailListItem"
+import { EmailContent } from "./components/EmailContent"
+import { Bottombar } from "./components/Bottombar"
+
+export type Email = {
+  id: number
+  from: string
+  subject: string
+  body: string
+  createdAt: string
+}
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [openEmail, setOpenEmail] = useState<Email | null>(null)
 
   return (
     <>
       <Header />
-      <div className="h-screen bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-50 grid place-content-center">
-        <h1 className="text-3xl text-center">Ready to start with Tailwind!</h1>
-        <button
-          className="
-        w-fit mx-auto my-8 px-4 py-2 rounded-lg
-        border-transparent hover:border-cyan-500 border-[1px]
-        transition-colors"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          count is {count}
-        </button>
-      </div>
+      <Container>
+        <div className="flex flex-col md:flex-row gap-2 xl:gap-4 h-full relative">
+          <Sidebar />
+          <div className="relative overflow-y-scroll grow-[1]">
+            {db.map(email => (
+              <EmailListItem
+                key={email.id}
+                email={email}
+                onClick={() => setOpenEmail(email)}
+              />
+            ))}
+          </div>
+          {openEmail && <EmailContent email={openEmail} onClose={() => setOpenEmail(null)} />}
+          <Bottombar />
+        </div>
+      </Container>
     </>
   )
 }

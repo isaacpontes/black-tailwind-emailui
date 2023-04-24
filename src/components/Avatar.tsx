@@ -1,4 +1,4 @@
-export default () => (
+export const Avatar = () => (
   <img
     className="rounded-full border-[1px] border-zinc-400"
     width={48}
